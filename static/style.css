@@ -65,3 +65,26 @@ h1 {
 .nav-buttons a:hover {
     background-color: #e09e00;
 }
+
+.view-button {
+    background-color: #F4B400;
+    color: white;
+    padding: 8px 16px;
+    margin-top: 10px;
+    text-decoration: none;
+    border-radius: 6px;
+    display: inline-block;
+}
+
+.view-button:hover {
+    background-color: #e09e00;
+}
+
+.empty-state {
+    margin-top: 50px;
+    padding: 40px;
+    background-color: #fff7d6;
+    border-radius: 12px;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+    text-align: center;
+}

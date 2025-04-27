@@ -2,30 +2,34 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8">
-  <title>Kitchen Manager</title>
+  <title>KitchenPal 🍪</title>
   <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='style.css') }}">
 </head>
 <body>
-  <h1>Welcome to Your Kitchen App</h1>
-  
-  <a href="{{ url_for('add_recipe') }}">Add New Recipe</a>
+  <h1>Welcome to Your KitchenPal</h1>
 
-  <h2>Recipes:</h2>
-{% if recipes %}
-<div class="flex-container">
-    {% for recipe in recipes %}
-    <div class="card">
-      <h3>{{ recipe.title }}</h3>
-      {% if recipe.ingredient %}
-        <p><strong>Main Ingredient:</strong> {{ recipe.ingredient.name }}</p>
-      {% endif %}
-      <p><strong>Instructions:</strong> {{ recipe.instructions }}</p>
+  <div class="add-recipe-button">
+    <a href="{{ url_for('add_recipe') }}">+ Add New Recipe</a>
+  </div>
+
+  {% if recipes %}
+    <div class="flex-container">
+      {% for recipe in recipes %}
+      <div class="card">
+        <h2>{{ recipe.title }}</h2>
+        {% if recipe.ingredient %}
+          <p><strong>Main Ingredient:</strong> {{ recipe.ingredient.name }}</p>
+        {% endif %}
+        <p>{{ recipe.instructions[:100] }}...</p>
+        <a class="view-button" href="{{ url_for('view_recipe', recipe_id=recipe.id) }}">View Full Recipe</a>
+      </div>
+      {% endfor %}
     </div>
-    {% endfor %}
-</div>
-{% else %}
-    <p>No recipes yet. Add one!</p>
-{% endif %}
-  
+  {% else %}
+    <div class="empty-state">
+      <h2>No Recipes Yet 🍳</h2>
+      <p>Start by adding your first recipe!</p>
+    </div>
+  {% endif %}
 </body>
 </html>

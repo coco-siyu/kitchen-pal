@@ -1,15 +1,13 @@
+import os
 from flask import Flask, render_template, request, redirect, url_for
 from flask_sqlalchemy import SQLAlchemy
-app = Flask(__name__)
 
-# config sqlite db
-app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///recipes.db' 
+app = Flask(__name__)
+app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///recipes.db'
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
+
 db = SQLAlchemy(app)
 
- # automatically creates tables if not yet created
-with app.app_context():
-    db.create_all()
 class Recipe(db.Model):
     id = db.Column(db.Integer, primary_key = True)
     title = db.Column(db.String(100), nullable=False)
@@ -20,6 +18,10 @@ class Recipe(db.Model):
 class Ingredient(db.Model):
     id = db.Column(db.Integer, primary_key = True)
     name = db.Column(db.String(100), nullable=False)
+
+ # automatically creates tables if not yet created
+with app.app_context():
+    db.create_all()
 # home page
 @app.route("/")
 def home():
@@ -48,6 +50,12 @@ def add_recipe():
         return redirect(url_for('home'))
     
     return render_template("add_recipe.html", ingredients = ingredients)
+
+@app.route("/recipe/<int:recipe_id>")
+def view_recipe(recipe_id):
+    recipe = Recipe.query.get_or_404(recipe_id)
+    return render_template("view_recipe.html", recipe=recipe)
+
 
 if __name__ == "__main__":
     app.run(debug=True)
