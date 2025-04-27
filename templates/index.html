@@ -11,14 +11,21 @@
   <a href="{{ url_for('add_recipe') }}">Add New Recipe</a>
 
   <h2>Recipes:</h2>
-  {% if recipes %}
-    <ul>
+{% if recipes %}
+<div class="flex-container">
     {% for recipe in recipes %}
-      <li><strong>{{ recipe.title }}</strong>: {{ recipe.ingredients }}</li>
+    <div class="card">
+      <h3>{{ recipe.title }}</h3>
+      {% if recipe.ingredient %}
+        <p><strong>Main Ingredient:</strong> {{ recipe.ingredient.name }}</p>
+      {% endif %}
+      <p><strong>Instructions:</strong> {{ recipe.instructions }}</p>
+    </div>
     {% endfor %}
-    </ul>
-  {% else %}
+</div>
+{% else %}
     <p>No recipes yet. Add one!</p>
-  {% endif %}
+{% endif %}
+  
 </body>
 </html>
