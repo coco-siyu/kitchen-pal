@@ -7,6 +7,9 @@ app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///recipes.db'
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 db = SQLAlchemy(app)
 
+ # automatically creates tables if not yet created
+with app.app_context():
+    db.create_all()
 class Recipe(db.Model):
     id = db.Column(db.Integer, primary_key = True)
     title = db.Column(db.String(100), nullable=False)
@@ -47,7 +50,4 @@ def add_recipe():
     return render_template("add_recipe.html", ingredients = ingredients)
 
 if __name__ == "__main__":
-    # automatically creates tables if not yet created
-    with app.app_context():
-        db.create_all()
     app.run(debug=True)
