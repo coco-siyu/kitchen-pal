@@ -14,7 +14,7 @@ class Recipe(db.Model):
     ingredient = db.relationship('Ingredient')
     instructions = db.Column(db.Text, nullable=True)
 
-class Ingredient(db.MOdel):
+class Ingredient(db.Model):
     id = db.Column(db.Integer, primary_key = True)
     name = db.Column(db.String(100), nullable=False)
 # home page
@@ -26,6 +26,9 @@ def home():
 # add recipe page
 @app.route("/add", methods=["GET", "POST"])
 def add_recipe():
+    # query alphabatically
+    ingredients = Ingredient.query.order_by(Ingredient.name.asc()).all()
+    
     if request.method == "POST":
         title = request.form["title"]
         ingredient_id = request.form.get("ingredient_id")
@@ -41,9 +44,10 @@ def add_recipe():
         # })
         return redirect(url_for('home'))
     
-    return render_template("add_recipe.html")
+    return render_template("add_recipe.html", ingredients = ingredients)
 
 if __name__ == "__main__":
+    # automatically creates tables if not yet created
     with app.app_context():
         db.create_all()
     app.run(debug=True)
