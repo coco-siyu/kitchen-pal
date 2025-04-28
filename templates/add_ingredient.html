@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Add Ingredient - KitchenPal</title>
+  <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+</head>
+<body>
+  <div class="navbar">
+    <a href="{{ url_for('home') }}">🏠 Home</a>
+    <a href="{{ url_for('add_recipe') }}">➕ Add Recipe</a>
+    <a href="{{ url_for('add_ingredient') }}">🌿 Add Ingredient</a>
+  </div>
+
+  {% with messages = get_flashed_messages() %}
+    {% if messages %}
+      <div class="flash-messages">
+        {% for message in messages %}
+          <div class="flash">{{ message }}</div>
+        {% endfor %}
+      </div>
+    {% endif %}
+  {% endwith %}
+
+  <div class="form-card">
+    <h1>Add New Ingredient</h1>
+    <form method="POST">
+      <label for="name">Ingredient Name:</label><br>
+      <input type="text" id="name" name="name" required><br><br>
+      <button class="submit-button" type="submit">Add Ingredient</button>
+    </form>
+
+    <h2>Existing Ingredients:</h2>
+    <ul>
+      {% for ingredient in ingredients %}
+        <li>{{ ingredient.name }}</li>
+      {% endfor %}
+    </ul>
+  </div>
+</body>
+</html>

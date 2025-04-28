@@ -6,11 +6,23 @@
   <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='style.css') }}">
 </head>
 <body>
+  <div class="navbar">
+    <a href="{{ url_for('home') }}">🏠 Home</a>
+    <a href="{{ url_for('add_recipe') }}">➕ Add Recipe</a>
+  </div>
+  
+  {% with messages = get_flashed_messages() %}
+    {% if messages %}
+      <div class="flash-messages">
+        {% for message in messages %}
+          <div class="flash">{{ message }}</div>
+        {% endfor %}
+      </div>
+    {% endif %}
+  {% endwith %}
+  
   <h1>Welcome to Your KitchenPal</h1>
 
-  <div class="add-recipe-button">
-    <a href="{{ url_for('add_recipe') }}">+ Add New Recipe</a>
-  </div>
 
   {% if recipes %}
     <div class="flex-container">
