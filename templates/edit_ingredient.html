@@ -1,0 +1,24 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Edit Ingredient - KitchenPal</title>
+  <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='style.css') }}">
+</head>
+<body>
+  <div class="navbar">
+    <a href="{{ url_for('home') }}">🏠 Home</a>
+    <a href="{{ url_for('add_ingredient') }}">➕ Manage Ingredients</a>
+  </div>
+
+  <div class="form-card">
+    <h1>Edit Ingredient</h1>
+    <form method="POST">
+      <label for="name">Ingredient Name:</label><br>
+      <input type="text" id="name" name="name" value="{{ ingredient.name }}" required><br><br>
+
+      <button class="submit-button" type="submit">Update Ingredient</button>
+    </form>
+  </div>
+</body>
+</html>

@@ -27,6 +27,29 @@ class Ingredient(db.Model):
 with app.app_context():
     db.create_all()
 
+def process_ingredients(selected_ingredient_inputs):
+    """Process selected ingredients: reuse existing or create new ones."""
+    processed_ingredients = []
+    for ing_input in selected_ingredient_inputs:
+        ing_input = ing_input.strip()  # Trim spaces
+        
+        if ing_input.isdigit():
+            # Existing ingredient
+            ingredient = Ingredient.query.get(int(ing_input))
+            if ingredient:
+                processed_ingredients.append(ingredient)
+        else:
+            # New ingredient typed
+            ing_input_lower = ing_input.lower()
+            existing = Ingredient.query.filter(db.func.lower(Ingredient.name) == ing_input_lower).first()
+            if existing:
+                processed_ingredients.append(existing)
+            else:
+                new_ingredient = Ingredient(name=ing_input)
+                db.session.add(new_ingredient)
+                processed_ingredients.append(new_ingredient)
+    return processed_ingredients
+
 # home page
 @app.route("/")
 def home():
@@ -41,13 +64,10 @@ def add_recipe():
     
     if request.method == "POST":
         title = request.form["title"]
-        ingredient_ids = request.form.getlist("ingredient_ids")
+        selected_ingredient_inputs = request.form.getlist("ingredient_ids")
         instructions = request.form["instructions"]
         new_recipe = Recipe(title=title, instructions=instructions)
-
-        # Add multiple selected ingredients
-        selected_ingredients = Ingredient.query.filter(Ingredient.id.in_(ingredient_ids)).all()
-        new_recipe.ingredients.extend(selected_ingredients)
+        new_recipe.ingredients.extend(process_ingredients(selected_ingredient_inputs))
         
         db.session.add(new_recipe)
         db.session.commit()
@@ -62,10 +82,10 @@ def edit_recipe(recipe_id):
 
     recipe.title = request.form["title"]
     recipe.instructions = request.form["instructions"]
-    ingredient_ids = request.form.getlist("ingredient_ids")
+    selected_ingredient_inputs = request.form.getlist("ingredient_ids")
 
-    recipe.ingredients = Ingredient.query.filter(Ingredient.id.in_(ingredient_ids)).all()
-    
+    recipe.ingredients = process_ingredients(selected_ingredient_inputs)
+
     db.session.commit()
     flash("Recipe updated successfully! 🎉")
     return redirect(url_for('view_recipe', recipe_id=recipe.id))
@@ -96,8 +116,31 @@ def add_ingredient():
         flash("Ingredient added successfully! 🥬")
         return redirect(url_for('add_ingredient'))
     
-    ingredients = Ingredient.query.all()
+    ingredients = Ingredient.query.order_by(Ingredient.name.asc()).all()
     return render_template("add_ingredient.html", ingredients=ingredients)
+
+@app.route("/edit-ingredient/<int:ingredient_id>", methods=["GET", "POST"])
+def edit_ingredient(ingredient_id):
+    ingredient = Ingredient.query.get_or_404(ingredient_id)
+
+    if request.method == "POST":
+        new_name = request.form["name"].strip()
+        if new_name:
+            ingredient.name = new_name
+            db.session.commit()
+            flash("Ingredient updated successfully! ✨")
+            return redirect(url_for('add_ingredient'))
+
+    return render_template("edit_ingredient.html", ingredient=ingredient)
+
+@app.route("/delete-ingredient/<int:ingredient_id>", methods=["POST"])
+def delete_ingredient(ingredient_id):
+    ingredient = Ingredient.query.get_or_404(ingredient_id)
+
+    db.session.delete(ingredient)
+    db.session.commit()
+    flash("Ingredient deleted successfully! 🗑️")
+    return redirect(url_for('add_ingredient'))
 
 if __name__ == "__main__":
     app.run(debug=True)

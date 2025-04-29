@@ -186,4 +186,59 @@ input, select, textarea {
     from { opacity: 0; }
     to { opacity: 1; }
 }
-
+/* Beautify Select2 multiple select */
+.select2-container--default .select2-selection--multiple {
+    border: 2px solid #ffd54f; /* Warm lemon yellow border */
+    border-radius: 12px;
+    background-color: #fff8e1; /* Light kitchen cream */
+    padding: 8px;
+    min-height: 50px;
+  }
+  
+  .select2-selection__choice {
+    background-color: #ffd54f; /* Bright lemon yellow */
+    border: none;
+    border-radius: 15px;
+    color: #5c3700;
+    font-weight: bold;
+    padding: 5px 10px;
+    margin: 4px 2px;
+  }
+  
+  .select2-selection__choice__remove {
+    color: white;
+    margin-right: 5px;
+    font-size: 16px;
+    font-weight: bold;
+  }
+  
+  .ingredient-preview {
+    list-style: none;
+    padding-left: 0;
+  }
+  
+  .ingredient-preview li {
+    background-color: #fff8e1;
+    padding: 8px 12px;
+    border-radius: 10px;
+    margin-bottom: 8px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    font-size: 16px;
+  }
+  
+  .ingredient-preview a {
+    text-decoration: none;
+    margin-left: 10px;
+  }
+  
+  .small-delete {
+    font-size: 14px;
+    margin-left: 8px;
+    padding: 4px 6px;
+    border-radius: 6px;
+    background-color: #eee;
+    border: 1px solid #ccc;
+  }
+  
