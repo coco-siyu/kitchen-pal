@@ -1,4 +1,4 @@
-<!-- <!DOCTYPE html>
+<!DOCTYPE html>
 <html lang="en">
 <head>
   <meta charset="UTF-8">
@@ -45,25 +45,4 @@
     </div>
   {% endif %}
 </body>
-</html> -->
-
-<link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='style.css') }}">
-<h1>🍽️ Welcome to KitchenPal</h1>
-<p>Your personal kitchen companion to organize recipes, manage ingredients, and keep track of your pantry!</p>
-<div class="summary-grid">
-  <div class="summary-box">
-    <h2>{{ recipes|length }}</h2>
-    <p>Total Recipes</p>
-    <a href="{{ url_for('recipes') }}">See All →</a>
-  </div>
-  <div class="summary-box">
-    <h2>{{ ingredients|length }}</h2>
-    <p>Ingredients</p>
-    <a href="{{ url_for('add_ingredient') }}">Manage →</a>
-  </div>
-  <div class="summary-box coming-soon">
-    <h2>–</h2>
-    <p>Pantry Tracker</p>
-    <span>Coming Soon</span>
-  </div>
-</div>
+</html>

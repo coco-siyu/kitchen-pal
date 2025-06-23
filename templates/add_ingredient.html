@@ -8,8 +8,12 @@
 <body>
   <div class="navbar">
     <a href="{{ url_for('home') }}">🏠 Home</a>
-    <a href="{{ url_for('add_recipe') }}">➕ Add Recipe</a>
+    <a href="{{ url_for('all_ingredients') }}"> 📋 View All Ingredients</a>
     <a href="{{ url_for('add_ingredient') }}">✨ Add Ingredient</a>
+    <p style="margin-top: 20px;">
+      <a href="{{ url_for('add_recipe') }}" class="back-link">➕ Add Recipe</a>
+    </p>
+    
   </div>
 
   {% with messages = get_flashed_messages() %}
@@ -30,7 +34,7 @@
       <button class="submit-button" type="submit">Add Ingredient</button>
     </form>
 
-    <h2>Existing Ingredients (Preview):</h2>
+    <!-- <h2>Existing Ingredients (Preview):</h2>
     <ul class="ingredient-preview">
       {% for ingredient in ingredients[:8] %}
         <li>
@@ -45,7 +49,22 @@
     
     {% if ingredients|length > 8 %}
       <p style="margin-top: 10px; font-style: italic;">...and {{ ingredients|length - 8 }} more</p>
-    {% endif %}
-    
+    {% endif %} -->
+    <h2>Existing Ingredients (Preview):</h2>
+<ul class="ingredient-list">
+  {% for ingredient in ingredients[:8] %}
+    <li class="ingredient-item">
+      <span class="ingredient-name">{{ ingredient.name }}</span>
+      <div class="ingredient-actions">
+        <a href="{{ url_for('edit_ingredient', ingredient_id=ingredient.id) }}">✏️ Edit</a>
+        <form method="POST" action="{{ url_for('delete_ingredient', ingredient_id=ingredient.id) }}" style="display:inline;">
+          <button type="submit" onclick="return confirm('Delete this ingredient?')">🗑️</button>
+        </form>
+      </div>
+    </li>
+  {% endfor %}
+</ul>
+<p style="text-align: center; font-style: italic;">...and {{ ingredients|length - 8 }} more</p>
+
 </body>
 </html>

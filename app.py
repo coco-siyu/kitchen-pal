@@ -1,5 +1,5 @@
 import os
-from flask import Flask, render_template, request, redirect, url_for, flash, get_flashed_messages
+from flask import Flask, render_template, request, redirect, url_for, flash, request, jsonify, get_flashed_messages
 from flask_sqlalchemy import SQLAlchemy
 
 app = Flask(__name__)
@@ -54,7 +54,8 @@ def process_ingredients(selected_ingredient_inputs):
 @app.route("/")
 def home():
     recipes = Recipe.query.all() # display everything
-    return render_template("index.html", recipes=recipes)
+    ingredients = Ingredient.query.all()
+    return render_template("index.html", recipes=recipes, ingredients = ingredients)
 
 # add recipe page
 @app.route("/add", methods=["GET", "POST"])
@@ -100,6 +101,18 @@ def delete_recipe(recipe_id):
     return redirect(url_for('home'))
 
 
+# ------------------- Ingredients Related Routes
+@app.route("/ingredients/")
+@app.route("/ingredients/<letter>")
+def all_ingredients(letter=None):
+    if letter:
+        ingredients = Ingredient.query.filter(
+            Ingredient.name.ilike(f"{letter}%")
+        ).order_by(Ingredient.name.asc()).all()
+    else:
+        ingredients = Ingredient.query.order_by(Ingredient.name.asc()).all()
+    return render_template("ingredients.html", ingredients=ingredients, selected_letter=letter)
+
 @app.route("/recipe/<int:recipe_id>")
 def view_recipe(recipe_id):
     recipe = Recipe.query.get_or_404(recipe_id)
@@ -141,6 +154,35 @@ def delete_ingredient(ingredient_id):
     db.session.commit()
     flash("Ingredient deleted successfully! 🗑️")
     return redirect(url_for('add_ingredient'))
+
+@app.route("/recipes")
+def recipes():
+    recipes = Recipe.query.all() # display everything
+    return render_template("recipes.html", recipes=recipes)
+
+@app.route("/populate_ingredients")
+def populate_ingredients():
+    common_ingredients = [
+        "All-purpose flour", "Baking powder", "Baking soda", "Cornstarch", "Cocoa powder",
+        "Powdered sugar", "Granulated sugar", "Brown sugar",
+        "Butter", "Unsalted butter", "Margarine", "Vegetable oil", "Coconut oil",
+        "Eggs", "Milk", "Buttermilk", "Heavy cream", "Sour cream", "Cream cheese",
+        "Condensed milk", "Evaporated milk",
+        "Vanilla extract", "Almond extract", "Honey", "Maple syrup",
+        "Chocolate chips", "White chocolate", "Chopped nuts", "Sprinkles", 
+        "Coconut flakes", "Dried fruit",
+        "Lemon zest", "Lemon juice", "Bananas", "Applesauce"
+    ]
+
+    added = 0
+    for name in common_ingredients:
+        if not Ingredient.query.filter_by(name=name).first():
+            db.session.add(Ingredient(name=name))
+            added += 1
+    db.session.commit()
+    return f"✅ Populated {added} new ingredients!"
+
+
 
 if __name__ == "__main__":
     app.run(debug=True)
